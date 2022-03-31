@@ -1,0 +1,12 @@
+name: sedproxy-shiny
+title: sedproxy-shiny
+username:
+account: limnolrgy
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 235921
+bundleId: 1451848
+url: https://limnolrgy.shinyapps.io/sedproxy-shiny/
+when: 1530093958.77421
+asMultiple: FALSE
+asStatic: FALSE
