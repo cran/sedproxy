@@ -447,10 +447,11 @@ ClimToProxyClim <- function(clim.signal,
     # identify mixed layer
     # find oldest timepoint in mixed layer
 
-    oldest.in.mix <- which.max(timepoints[min.ind == TRUE])
+    oldest.in.mix <- timepoints[min.ind == TRUE]
 
     if (length(oldest.in.mix)!=0) {
-      mixed.layer.inds <- timepoints <= timepoints[oldest.in.mix] & tpts.above.core.top == FALSE
+      mixed.layer.inds <- min.ind == TRUE & tpts.above.core.top == FALSE
+      #mixed.layer.inds <- timepoints <= timepoints[timepoints[min.ind == TRUE]] & tpts.above.core.top == FALSE
       #mixed.layer.inds <- mixed.layer.inds[tpts.above.core.top == FALSE]
     } else {
       mixed.layer.inds <- rep(FALSE, n.timepoints)
@@ -579,7 +580,7 @@ ClimToProxyClim <- function(clim.signal,
                                              bio.depth = bio.depth)
 
 
-      clim.sig.window <-  proxy.clim.signal[which(stats::time(clim.signal)%in%(first.tp:last.tp)), , drop = FALSE]
+      clim.sig.window <-  proxy.clim.signal[which(as.numeric(stats::time(clim.signal))%in%(first.tp:last.tp)), , drop = FALSE]
 
 
 
@@ -591,7 +592,7 @@ ClimToProxyClim <- function(clim.signal,
 
 
       # Get bioturbation X seasonality weights matrix ---------
-      habitat.weights <- habitat.weights[which(stats::time(clim.signal)%in%(first.tp:last.tp+1)), , drop = FALSE]
+      habitat.weights <- habitat.weights[which(as.numeric(stats::time(clim.signal))%in%(first.tp:last.tp+1)), , drop = FALSE]
       habitat.weights <- habitat.weights / sum(habitat.weights)
       clim.sig.weights <- bioturb.weights * habitat.weights
       clim.sig.weights <- clim.sig.weights / sum(clim.sig.weights)
@@ -787,7 +788,6 @@ ClimToProxyClim <- function(clim.signal,
   out$timepoints = timepoints
   out$n.samples = n.samples
   out$clim.signal.ann = rowSums(
-    # clim.signal[time(clim.signal) %in% timepoints, , drop = FALSE]
     clim.signal[match(timepoints, stats::time(clim.signal)), , drop = FALSE]
     ) / ncol(clim.signal)
   #out$sed.acc.rate = sed.acc.rate
@@ -917,8 +917,10 @@ ClimToProxyClim <- function(clim.signal,
 
 ChunkMatrix <- function(timepoints, width, climate.matrix){
 
+  rel.wind <- 1:width -ceiling(width/2)
+
   if (stats::is.ts(climate.matrix)) {
-    rel.wind <- 1:width -round(width/2)
+
     strt <- stats::start(climate.matrix)[1]
     n.row <- nrow(climate.matrix)
     sapply(timepoints, function(tp){
@@ -928,8 +930,6 @@ ChunkMatrix <- function(timepoints, width, climate.matrix){
       mean(m)
     })}else{
     max.clim.signal.i <- nrow(climate.matrix)
-
-    rel.wind <- 1:width -round(width/2)
 
     sapply(timepoints, function(tp){
 

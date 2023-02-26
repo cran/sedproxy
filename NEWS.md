@@ -1,3 +1,14 @@
+# sedproxy 0.7.5
+* depend on R >= 3.5.0
+* remove tidyverse from suggests 
+* move Shiny code to new package https://github.com/EarthSystemDiagnostics/shinysedproxy
+* wrap stat::time() in as.numeric() to speed up %in% comparison
+
+# sedproxy 0.7.4
+* fix bug in ChunkMatrix where if a single timepoint is selected it would be off by one
+* fix bug in BioturbationWeights to allow very small mixing depths with zero layer thickness
+* fix bug in assigning points to the mixed layer when timepoint are not in increasing age order
+
 # sedproxy 0.7.3
 * refactor and rename growth rate function to be more intuitive
 
